@@ -28,3 +28,5 @@ Auth::routes([
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('producto', ProductController::class);
+
+Route::get('comprar/{id}', [App\Http\Controllers\ProductController::class, 'comprar'])->name('producto.comprar');

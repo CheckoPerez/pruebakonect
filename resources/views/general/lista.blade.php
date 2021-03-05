@@ -1,23 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <!-- Scripts -->
-     <script src="{{ asset('js/app.js') }}" defer></script>
+@extends('layouts.app')
 
-<!-- Styles -->
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <title>Document</title>
-</head>
-<body>
-    <p>Esta es la pgina de los productos</p>
+@section('content')
+<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+<div class="container">
+    <h1 class="h1">Esta es la pgina de los productos</h1>
     <ul>
-        @foreach($productos as $product)
-            <li>{{$product->nombre}}</li>
-        @endforeach
+        <div class="grid grid-cols-2 ">@foreach($productos as $product)
+            <li>
+                @if($product->stock > 0)
+                <div>{{$product->nombre}}</br>
+                    ${{$product->precio}}<br>
+                    {{$product->stock}} disponibles
+                </div>
+                <div>
+                    <a href="{{route('producto.comprar', $product->id)}}" class="bg-green-500 hover:bg-green-700 text-white rounded" >Comprar</a>
+                </div>
+                @else
+                <div>{{$product->nombre}}</br>
+                    ${{$product->precio}}<br>
+                    {{$product->stock}} disponibles
+                </div>
+                <div><button class="bg-gray-700  text-white rounded disabled">
+                        Comprar
+                    </button>
+
+                </div>
+                @endif
+
+            </li>
+            @endforeach
+        </div>
+
     </ul>
     {{$productos->links()}}
-</body>
-</html>
+</div>
+
+
+
+@endsection

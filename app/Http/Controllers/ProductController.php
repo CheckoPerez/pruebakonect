@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -24,7 +25,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.crear');
     }
 
     /**
@@ -35,7 +36,24 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre'=> 'required',
+            'categoria'=> 'required',
+            'referencia'=> 'required',
+            'precio'=> 'required',
+            'peso'=> 'required',
+            'stock'=> 'required',
+            ]);
+        $product = new Product();
+        $product->nombre = $request->nombre;
+        $product->categoria = $request->categoria;
+        $product->referencia = $request->referencia;
+        $product->precio = $request->precio;
+        $product->peso = $request->peso;
+        $product->stock = $request->stock;
+        $product->fecha_ultimaventa = null;
+        $product->save();
+        return redirect()->route('home');
     }
 
     /**
@@ -55,9 +73,10 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Product $product, Request $request)
     {
-        //
+        $product = Product::find($request->id);
+        return view('admin.edit', compact('product'));
     }
 
     /**
@@ -67,9 +86,25 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update( Request $request)
     {
-        //
+        $request->validate([
+            'nombre'=> 'required',
+            'categoria'=> 'required',
+            'referencia'=> 'required',
+            'precio'=> 'required',
+            'peso'=> 'required',
+            'stock'=> 'required',
+            ]);
+        $product = Product::find($request->id);
+        $product->nombre = $request->nombre;
+        $product->categoria = $request->categoria;
+        $product->referencia = $request->referencia;
+        $product->precio = $request->precio;
+        $product->peso = $request->peso;
+        $product->stock = $request->stock;
+        $product->save();
+        return redirect()->route('home');
     }
 
     /**
@@ -78,8 +113,18 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product, Request $request)
     {
-        //
+        Product::find($request->id)->delete();
+        return redirect()->route('home');
+    }
+
+    public function comprar($id)
+    {
+        $product = Product::find($id);
+        $product->stock = $product->stock - 1;
+        $product->fecha_ultimaventa = Carbon::now();
+        $product->save();
+        return redirect()->back();;
     }
 }

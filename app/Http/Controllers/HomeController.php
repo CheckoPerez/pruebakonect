@@ -26,11 +26,11 @@ class HomeController extends Controller
     public function index()
     {
         if (Auth::user()->is_admin) {
-            $productos = Product::paginate();
-            return view('general.lista', compact('productos'));
+            $productos = Product::paginate(10);
+            return view('admin.lista', compact('productos'));
         }else{
-            $productos = Product::paginate();
-            return $productos;
+            $productos = Product::paginate(10);
+            return view('general.lista', compact('productos'));
         }
         
     }
